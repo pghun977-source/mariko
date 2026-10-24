@@ -63,7 +63,7 @@
     var appStarted = false;
     function loadApp() { // 앱 코드 받기 (한 번만)
       if (appStarted) return; appStarted = true;
-      var s = document.createElement("script"); s.src = "/mariko/_expo/static/js/web/entry-9b24a4a2a65b7fad57e9ad186a21638b.js";
+      var s = document.createElement("script"); s.src = "/mariko/_expo/static/js/web/entry-7231a825293b203c66e3663648f7c731.js";
       (document.body || document.documentElement).appendChild(s);
     }
     setTimeout(loadApp, 1200);
@@ -78,7 +78,12 @@
     }
     try { if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { box.parentNode.removeChild(box); loadApp(); return; } } catch (e) {}
     // 단축어에서 돌아오는 길(앱이 단축어를 연 지 10분 안, src/watchRelay.tsx의 rhythm-coach:watch-wait)이면 인트로를 건너뛴다
-    try { var w = +localStorage.getItem("rhythm-coach:watch-wait"); if (w && Date.now() - w < 600000) { finish(); return; } } catch (e) {}
+    // '새 판 · 지금 바꾸기'로 새로 불러온 길(src/updateBanner.tsx의 rhythm-coach:skip-intro, 1분 안)이어도 건너뛴다
+    try {
+      var w = +localStorage.getItem("rhythm-coach:watch-wait"), k = +localStorage.getItem("rhythm-coach:skip-intro");
+      if (k) localStorage.removeItem("rhythm-coach:skip-intro");
+      if ((w && Date.now() - w < 600000) || (k && Date.now() - k < 60000)) { finish(); return; }
+    } catch (e) {}
     v.muted = true;
     function show() { v.style.opacity = "1"; box.classList.add("on"); } // 영상과 제목을 같은 순간에
     v.addEventListener("playing", show);
