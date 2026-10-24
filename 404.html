@@ -63,7 +63,7 @@
     var appStarted = false;
     function loadApp() { // 앱 코드 받기 (한 번만)
       if (appStarted) return; appStarted = true;
-      var s = document.createElement("script"); s.src = "/mariko/_expo/static/js/web/entry-472b2311e6306b009cb96b40652b2aba.js";
+      var s = document.createElement("script"); s.src = "/mariko/_expo/static/js/web/entry-543a2e831f27039ed5d1d166bfec9051.js";
       (document.body || document.documentElement).appendChild(s);
     }
     setTimeout(loadApp, 1200);
@@ -77,6 +77,8 @@
       setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); window.__introDone = true; window.dispatchEvent(new Event("intro-done")); }, 240);
     }
     try { if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { box.parentNode.removeChild(box); loadApp(); return; } } catch (e) {}
+    // 단축어에서 돌아오는 길(앱이 단축어를 연 지 10분 안, src/watchRelay.tsx의 rhythm-coach:watch-wait)이면 인트로를 건너뛴다
+    try { var w = +localStorage.getItem("rhythm-coach:watch-wait"); if (w && Date.now() - w < 600000) { finish(); return; } } catch (e) {}
     v.muted = true;
     function show() { v.style.opacity = "1"; box.classList.add("on"); } // 영상과 제목을 같은 순간에
     v.addEventListener("playing", show);
